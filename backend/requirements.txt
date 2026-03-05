@@ -1,0 +1,12 @@
+Flask==3.0.0
+Flask-CORS==4.0.0
+bcrypt==4.1.2
+python-dotenv==1.0.0
+qrcode==7.4.2
+# Prefer a Pillow release with prebuilt wheels for Windows/Python 3.13
+Pillow==10.4.0
+PyJWT==2.8.0
+Flask-Limiter==3.5.0
+openpyxl==3.1.2
+validators==0.22.0
+supabase

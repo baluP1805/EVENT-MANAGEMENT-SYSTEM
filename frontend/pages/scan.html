@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Scan QR Code - College EMS</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="navbar">
+            <h1 class="logo">College EMS</h1>
+            <div class="nav-right">
+                <span id="studentName" class="nav-username"></span>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <h1>Scan QR Code for Attendance</h1>
+                <p>Scan the event QR code to mark your attendance</p>
+            </div>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+            
+            <div class="scan-container">
+                <div class="scan-instructions">
+                    <h3>📱 How to mark attendance:</h3>
+                    <ol>
+                        <li>Make sure you are registered for the event</li>
+                        <li>Scan the QR code displayed at the event venue</li>
+                        <li>Paste the scanned data in the textarea below</li>
+                        <li>Click "Mark Attendance" button</li>
+                    </ol>
+                </div>
+                
+                <div class="scan-form">
+                    <div class="camera-scan">
+                        <h4>Live Camera Scan</h4>
+                        <div id="qr-reader" style="width:100%; max-width:480px; margin-bottom:12px;"></div>
+                        <div style="display:flex; gap:8px; align-items:center; margin-bottom:8px;">
+                            <select id="cameraSelect"></select>
+                            <button id="startScanBtn" class="btn btn-secondary">Start Camera</button>
+                            <button id="stopScanBtn" class="btn btn-secondary" style="display:none;">Stop Camera</button>
+                            <button id="toggleTorchBtn" class="btn btn-secondary" style="display:none;">Toggle Torch</button>
+                        </div>
+                        <p style="color:var(--text-secondary);">If camera scanning fails, paste QR data below.</p>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="qrData">Paste QR Code Data</label>
+                        <textarea id="qrData" rows="6" placeholder='Paste the scanned QR code data here (JSON format)' class="form-control"></textarea>
+                    </div>
+                    
+                    <button id="markAttendanceBtn" class="btn btn-primary btn-full">Mark Attendance</button>
+                </div>
+                
+                <div id="attendanceResult" class="result-box" style="display: none;">
+                    <!-- Result will be displayed here -->
+                </div>
+                
+                <div class="my-attendance">
+                    <h3>My Attendance Records</h3>
+                    <button id="viewMyAttendanceBtn" class="btn btn-secondary">View My Attendance</button>
+                    <div id="myAttendanceList" class="attendance-list" style="display: none;">
+                        <!-- Attendance records will be displayed here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="../js/scan.js"></script>
+</body>
+</html>

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - College EMS</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="dashboard-container">
+        <nav class="navbar">
+            <h1 class="logo">College EMS - Admin</h1>
+            <div class="nav-right">
+                <span class="nav-username">Administrator</span>
+                <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+            </div>
+        </nav>
+        
+        <div class="main-content">
+            <div class="page-header">
+                <h1>Admin Dashboard</h1>
+                <p>Event management and attendance tracking</p>
+            </div>
+            
+            <div id="errorMessage" class="error-message" style="display: none;"></div>
+            <div id="successMessage" class="success-message" style="display: none;"></div>
+            
+            <!-- Statistics Cards -->
+            <div class="stats-grid">
+                <div class="stat-card">
+                    <div class="stat-icon">👥</div>
+                    <div class="stat-content">
+                        <h3 id="totalStudents">0</h3>
+                        <p>Total Students</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">🎯</div>
+                    <div class="stat-content">
+                        <h3 id="totalEvents">0</h3>
+                        <p>Total Events</p>
+                    </div>
+                </div>
+                
+                <div class="stat-card">
+                    <div class="stat-icon">⚠️</div>
+                    <div class="stat-content">
+                        <h3 id="unauthorizedScans">0</h3>
+                        <p>Unauthorized Scans</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Search Student -->
+            <div class="search-section">
+                <h2>Search Student</h2>
+                <div class="search-box">
+                    <input type="text" id="searchRegNumber" placeholder="Enter register number">
+                    <button id="searchBtn" class="btn btn-primary">Search</button>
+                </div>
+                <div id="searchResult" class="search-result" style="display: none;"></div>
+            </div>
+            
+            <!-- Event Registrations -->
+            <div class="section">
+                <h2>Event-wise Registrations</h2>
+                <div id="eventRegistrations" class="table-container">
+                    <!-- Event registrations table will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- Department Statistics -->
+            <div class="section">
+                <h2>Department-wise Statistics</h2>
+                <div id="departmentStats" class="stats-list">
+                    <!-- Department stats will be loaded here -->
+                </div>
+            </div>
+            
+            <!-- QR Code Generation -->
+            <div class="section">
+                <h2>Generate QR Code for Event</h2>
+                <div class="qr-generation">
+                    <select id="eventSelect" class="form-control">
+                        <option value="">Select Event</option>
+                    </select>
+                    <button id="generateQRBtn" class="btn btn-primary">Generate QR Code</button>
+                </div>
+                
+                <div id="qrCodeDisplay" class="qr-display" style="display: none;">
+                    <div style="text-align: center; margin-bottom: 1rem;">
+                        <h3 style="color: var(--primary-color); margin-bottom: 0.5rem;">
+                            🎯 QR Code Generated
+                        </h3>
+                        <p style="font-size: 1.2rem; font-weight: 600; color: var(--text-color);">
+                            Event: <span id="qrEventName"></span>
+                        </p>
+                        <p style="color: #64748b; font-size: 0.9rem;">
+                            📱 Students should scan this QR code to mark attendance
+                        </p>
+                    </div>
+                    <div style="background: white; padding: 2rem; border-radius: 12px; display: inline-block; box-shadow: 0 4px 6px rgba(0,0,0,0.1);">
+                        <img id="qrCodeImage" src="" alt="QR Code" style="display: block; max-width: 100%;">
+                    </div>
+                    <div style="margin-top: 1rem;">
+                        <button id="downloadQRBtn" class="btn btn-secondary">📥 Download QR Code</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Attendance Reports -->
+            <div class="section">
+                <h2>Attendance Reports</h2>
+                <div class="report-actions">
+                    <select id="reportEventSelect" class="form-control">
+                        <option value="">Select Event</option>
+                    </select>
+                    <button id="viewReportBtn" class="btn btn-primary">View Report</button>
+                    <button id="exportExcelBtn" class="btn btn-secondary">Export to Excel</button>
+                </div>
+                
+                <div id="attendanceReport" class="report-container" style="display: none;">
+                    <!-- Attendance report will be displayed here -->
+                </div>
+            </div>
+            
+            <!-- Unauthorized Scans -->
+            <div class="section">
+                <h2>Unauthorized Scan Logs</h2>
+                <button id="viewLogsBtn" class="btn btn-secondary">View Logs</button>
+                <div id="unauthorizedLogs" class="logs-container" style="display: none;">
+                    <!-- Logs will be displayed here -->
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
+    <script src="../js/admin.js"></script>
+</body>
+</html>
