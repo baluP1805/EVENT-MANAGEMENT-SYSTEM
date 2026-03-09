@@ -4,91 +4,110 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Registration - College EMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-box auth-box-wide">
-            <div class="auth-header">
-                <h1>Student Registration</h1>
-                <p>Create your account to register for events.</p>
+    <div class="auth-split">
+        <!-- Brand Panel -->
+        <div class="auth-brand-panel">
+            <div class="auth-brand-logo">🎓</div>
+            <h1 class="auth-brand-title">Join College EMS</h1>
+            <p class="auth-brand-subtitle">Create your account and start participating in college events</p>
+            <div class="auth-brand-features">
+                <div class="auth-brand-feature">✅ Free to register</div>
+                <div class="auth-brand-feature">🎯 Register for one event</div>
+                <div class="auth-brand-feature">📱 QR code attendance</div>
+                <div class="auth-brand-feature">📧 Email confirmations</div>
             </div>
-            
-            <form id="registerForm" class="auth-form">
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="name">Full Name *</label>
-                        <input type="text" id="name" name="name" required placeholder="Enter your full name">
+        </div>
+        <!-- Form Panel -->
+        <div class="auth-form-panel" style="align-items:flex-start;padding-top:2rem;padding-bottom:2rem;">
+            <div class="auth-form-card" style="max-width:600px;">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                    <div>
+                        <h2 style="font-size:1.75rem;font-weight:800;color:var(--text-primary);margin-bottom:0.25rem;">Create Account</h2>
+                        <p style="color:var(--text-secondary);font-size:0.9rem;">Fill in your details to get started</p>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="register_number">Register Number *</label>
-                        <input type="text" id="register_number" name="register_number" required placeholder="Enter register number">
-                    </div>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
                 </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="department">Department *</label>
-                        <select id="department" name="department" required>
-                            <option value="">Select Department</option>
-                            <option value="Management">Management</option>
-                            <option value="Science">Science</option>
-                            <option value="Arts">Arts</option>
-                        </select>
+                <form id="registerForm">
+                    <div class="form-row">
+                        <div class="form-label-float">
+                            <label for="name">Full Name *</label>
+                            <input type="text" id="name" name="name" required placeholder="Enter your full name" autocomplete="name">
+                        </div>
+                        <div class="form-label-float">
+                            <label for="register_number">Register Number *</label>
+                            <input type="text" id="register_number" name="register_number" required placeholder="e.g. 21CS001">
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="course">Course/Programme *</label>
-                        <select id="course" name="course" required disabled>
-                            <option value="">Select Department First</option>
-                        </select>
+                    <div class="form-row">
+                        <div class="form-label-float">
+                            <label for="department">Department *</label>
+                            <select id="department" name="department" required>
+                                <option value="">Select Department</option>
+                                <option value="Management">Management</option>
+                                <option value="Science">Science</option>
+                                <option value="Arts">Arts</option>
+                            </select>
+                        </div>
+                        <div class="form-label-float">
+                            <label for="course">Course/Programme *</label>
+                            <select id="course" name="course" required disabled>
+                                <option value="">Select Department First</option>
+                            </select>
+                        </div>
                     </div>
-                </div>
-                
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="year">Year *</label>
-                        <select id="year" name="year" required>
-                            <option value="">Select Year</option>
-                            <option value="1st Year">1st Year</option>
-                            <option value="2nd Year">2nd Year</option>
-                            <option value="3rd Year">3rd Year</option>
-                        </select>
+                    <div class="form-row">
+                        <div class="form-label-float">
+                            <label for="year">Year *</label>
+                            <select id="year" name="year" required>
+                                <option value="">Select Year</option>
+                                <option value="1st Year">1st Year</option>
+                                <option value="2nd Year">2nd Year</option>
+                                <option value="3rd Year">3rd Year</option>
+                            </select>
+                        </div>
+                        <div class="form-label-float">
+                            <label for="phone_number">Phone Number *</label>
+                            <input type="tel" id="phone_number" name="phone_number" required placeholder="10-digit number" maxlength="10" autocomplete="tel">
+                        </div>
                     </div>
-                    
-                    <div class="form-group">
-                        <label for="phone_number">Phone Number *</label>
-                        <input type="tel" id="phone_number" name="phone_number" required placeholder="Enter 10-digit phone number" maxlength="10">
+                    <div class="form-label-float">
+                        <label for="email">Email Address *</label>
+                        <input type="email" id="email" name="email" required placeholder="you@college.edu" autocomplete="email">
                     </div>
+                    <div class="form-label-float">
+                        <label for="password">Password *</label>
+                        <div class="input-with-icon">
+                            <input type="password" id="password" name="password" required placeholder="Min 6 chars with letters &amp; numbers" autocomplete="new-password">
+                            <span class="input-icon" id="togglePwd" role="button" aria-label="Toggle password visibility">👁</span>
+                        </div>
+                        <small style="color:var(--text-secondary);font-size:0.8rem;margin-top:0.3rem;display:block;">At least 6 characters with letters and numbers</small>
+                    </div>
+                    <div id="errorMessage" class="error-message" style="display:none;"></div>
+                    <div id="successMessage" class="success-message" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-full" style="margin-top:0.5rem;min-height:48px;font-weight:600;font-size:1rem;">Create Account</button>
+                </form>
+                <div style="text-align:center;margin-top:1.5rem;color:var(--text-secondary);font-size:0.9rem;">
+                    <p>Already have an account? <a href="login.html" style="color:var(--primary);font-weight:600;text-decoration:none;">Sign in</a></p>
+                    <p style="margin-top:0.5rem;"><a href="../index.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">← Back to Home</a></p>
                 </div>
-                
-                <div class="form-group">
-                    <label for="email">Email *</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your email">
-                </div>
-                
-                <div class="form-group">
-                    <label for="password">Password *</label>
-                    <input type="password" id="password" name="password" required placeholder="Min 6 characters, include letters and numbers">
-                    <small>Password must be at least 6 characters and contain letters and numbers</small>
-                </div>
-                
-                <div id="errorMessage" class="error-message" style="display: none;"></div>
-                <div id="successMessage" class="success-message" style="display: none;"></div>
-                
-                <button type="submit" class="btn btn-primary btn-full">Register</button>
-            </form>
-            
-            <div class="auth-footer">
-                <p>Already have an account? <a href="login.html">Login here</a></p>
-                <p><a href="../index.html">Back to Home</a></p>
             </div>
         </div>
     </div>
-    
+    <div class="toast-container" id="toastContainer"></div>
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/register.js"></script>
+    <script>
+        document.getElementById('togglePwd')?.addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            if (pwd.type === 'password') { pwd.type = 'text'; this.textContent = '🙈'; }
+            else { pwd.type = 'password'; this.textContent = '👁'; }
+        });
+    </script>
 </body>
 </html>

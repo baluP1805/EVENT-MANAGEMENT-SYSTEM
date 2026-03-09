@@ -39,10 +39,10 @@ async function loadDashboard() {
 
 // Display dashboard data
 function displayDashboard(dashboard) {
-    // Update statistics
-    document.getElementById('totalStudents').textContent = dashboard.total_students;
-    document.getElementById('totalEvents').textContent = dashboard.total_events;
-    document.getElementById('unauthorizedScans').textContent = dashboard.unauthorized_scans;
+    // Animated stat counters
+    countUpAnimation('totalStudents', dashboard.total_students);
+    countUpAnimation('totalEvents', dashboard.total_events);
+    countUpAnimation('unauthorizedScans', dashboard.unauthorized_scans);
     
     // Display event registrations
     displayEventRegistrations(dashboard.event_registrations);
@@ -52,18 +52,24 @@ function displayDashboard(dashboard) {
     
     // Populate event selects
     populateEventSelects(dashboard.event_registrations);
+
+    // Render Chart.js charts
+    initCharts(dashboard);
 }
 
 // Display event registrations
 function displayEventRegistrations(events) {
     const container = document.getElementById('eventRegistrations');
-    
+
     if (events.length === 0) {
         container.innerHTML = '<p>No event registrations found.</p>';
         return;
     }
-    
+
     container.innerHTML = `
+        <div style="display:flex;justify-content:flex-end;margin-bottom:0.75rem;">
+            <button class="btn btn-secondary" onclick="exportAllAttendance()">📥 Export All Events</button>
+        </div>
         <table>
             <thead>
                 <tr>
@@ -333,27 +339,40 @@ searchBtn.addEventListener('click', async () => {
     }
 });
 
+// Holds the last searched student for edit/delete operations
+let _currentStudent = null;
+
 // Display Search Result
 function displaySearchResult(student) {
+    _currentStudent = student;
     const searchResult = document.getElementById('searchResult');
-    
+    const studentId = student.id || student._id;
+
     searchResult.innerHTML = `
-        <h3>Student Details</h3>
-        <p><strong>Name:</strong> ${student.name}</p>
-        <p><strong>Register Number:</strong> ${student.register_number}</p>
-        <p><strong>Department:</strong> ${student.department}</p>
-        <p><strong>Course/Programme:</strong> ${student.course || 'N/A'}</p>
-        <p><strong>Year:</strong> ${student.year}</p>
-        <p><strong>Email:</strong> ${student.email}</p>
-        <p><strong>Phone:</strong> ${student.phone_number}</p>
-        <p><strong>Registered Events:</strong></p>
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;flex-wrap:wrap;gap:0.5rem;">
+            <h3 style="margin:0;">Student Details</h3>
+            <div style="display:flex;gap:0.5rem;">
+                <button class="btn btn-sm btn-primary" onclick="editStudent()">✏️ Edit</button>
+                <button class="btn btn-sm btn-danger" onclick="deleteStudent('${studentId}', '${student.register_number}')">🗑️ Delete</button>
+            </div>
+        </div>
+        <div class="student-info-grid">
+            <p><strong>Name:</strong> ${student.name}</p>
+            <p><strong>Register Number:</strong> ${student.register_number}</p>
+            <p><strong>Department:</strong> ${student.department}</p>
+            <p><strong>Course/Programme:</strong> ${student.course || 'N/A'}</p>
+            <p><strong>Year:</strong> ${student.year}</p>
+            <p><strong>Email:</strong> ${student.email}</p>
+            <p><strong>Phone:</strong> ${student.phone_number}</p>
+        </div>
+        <p style="margin-top:0.75rem;"><strong>Registered Events:</strong></p>
         <ul>
-            ${student.registered_events && student.registered_events.length > 0 
-                ? student.registered_events.map(event => `<li>${event.event_name}</li>`).join('') 
+            ${student.registered_events && student.registered_events.length > 0
+                ? student.registered_events.map(event => `<li>${event.event_name}</li>`).join('')
                 : '<li>No registered events</li>'}
         </ul>
     `;
-    
+
     searchResult.style.display = 'block';
 }
 
@@ -400,25 +419,234 @@ function displayUnauthorizedLogs(logs) {
 
 // Helper functions
 function showError(message) {
-    const errorMessage = document.getElementById('errorMessage');
-    const successMessage = document.getElementById('successMessage');
-    
-    errorMessage.textContent = message;
-    errorMessage.style.display = 'block';
-    successMessage.style.display = 'none';
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof showToast === 'function') {
+        showToast(message, 'error');
+    } else {
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        errorMessage.textContent = message;
+        errorMessage.style.display = 'block';
+        successMessage.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
 }
 
 function showSuccess(message) {
-    const errorMessage = document.getElementById('errorMessage');
-    const successMessage = document.getElementById('successMessage');
-    
-    successMessage.textContent = message;
-    successMessage.style.display = 'block';
-    errorMessage.style.display = 'none';
-    
-    window.scrollTo({ top: 0, behavior: 'smooth' });
+    if (typeof showToast === 'function') {
+        showToast(message, 'success');
+    } else {
+        const errorMessage = document.getElementById('errorMessage');
+        const successMessage = document.getElementById('successMessage');
+        successMessage.textContent = message;
+        successMessage.style.display = 'block';
+        errorMessage.style.display = 'none';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+}
+
+/* === STUDENT EDIT === */
+function editStudent() {
+    if (!_currentStudent) return;
+    const s = _currentStudent;
+    const studentId = s.id || s._id;
+    const searchResult = document.getElementById('searchResult');
+
+    searchResult.innerHTML = `
+        <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:1rem;">
+            <h3 style="margin:0;">Edit Student</h3>
+        </div>
+        <div class="student-edit-form">
+            <div class="edit-form-grid">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" id="editName" class="form-control" value="${s.name || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Department</label>
+                    <input type="text" id="editDepartment" class="form-control" value="${s.department || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Course / Programme</label>
+                    <input type="text" id="editCourse" class="form-control" value="${s.course || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Year</label>
+                    <input type="text" id="editYear" class="form-control" value="${s.year || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" id="editEmail" class="form-control" value="${s.email || ''}">
+                </div>
+                <div class="form-group">
+                    <label>Phone Number</label>
+                    <input type="text" id="editPhone" class="form-control" value="${s.phone_number || ''}">
+                </div>
+            </div>
+            <div style="display:flex;gap:0.75rem;margin-top:1rem;">
+                <button class="btn btn-primary" onclick="saveEditStudent('${studentId}')">💾 Save Changes</button>
+                <button class="btn btn-secondary" onclick="displaySearchResult(_currentStudent)">✕ Cancel</button>
+            </div>
+        </div>
+    `;
+    searchResult.style.display = 'block';
+}
+
+async function saveEditStudent(studentId) {
+    const payload = {
+        name:         document.getElementById('editName').value.trim(),
+        department:   document.getElementById('editDepartment').value.trim(),
+        course:       document.getElementById('editCourse').value.trim(),
+        year:         document.getElementById('editYear').value.trim(),
+        email:        document.getElementById('editEmail').value.trim(),
+        phone_number: document.getElementById('editPhone').value.trim()
+    };
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/student/${studentId}`, {
+            method: 'PUT',
+            headers: {
+                'Authorization': `Bearer ${adminToken}`,
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(payload)
+        });
+        const data = await response.json();
+        if (data.success) {
+            // Update cached student and refresh view
+            _currentStudent = { ..._currentStudent, ...payload };
+            displaySearchResult(_currentStudent);
+            showSuccess('Student updated successfully!');
+        } else {
+            showError(data.message || 'Update failed');
+        }
+    } catch (e) {
+        showError('Failed to update student. Please try again.');
+    }
+}
+
+async function deleteStudent(studentId, registerNumber) {
+    if (!confirm(`Are you sure you want to delete student ${registerNumber}? This will also remove all their attendance records.`)) return;
+
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/student/${studentId}`, {
+            method: 'DELETE',
+            headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        const data = await response.json();
+        if (data.success) {
+            document.getElementById('searchResult').style.display = 'none';
+            _currentStudent = null;
+            showSuccess('Student deleted successfully!');
+            // Reload dashboard stats
+            loadDashboard();
+        } else {
+            showError(data.message || 'Delete failed');
+        }
+    } catch (e) {
+        showError('Failed to delete student. Please try again.');
+    }
+}
+
+/* === EXPORT ALL EVENTS === */
+async function exportAllAttendance() {
+    showSuccess('Preparing export, please wait…');
+    try {
+        const response = await fetch(`${API_BASE_URL}/admin/export-all-attendance`, {
+            headers: { 'Authorization': `Bearer ${adminToken}` }
+        });
+        if (response.ok) {
+            const blob = await response.blob();
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `all_events_attendance_${Date.now()}.xlsx`;
+            a.click();
+            window.URL.revokeObjectURL(url);
+            showSuccess('All events exported successfully!');
+        } else {
+            const data = await response.json();
+            showError(data.message || 'Export failed');
+        }
+    } catch (e) {
+        showError('Export failed. Please try again.');
+    }
+}
+
+/* === COUNT-UP ANIMATION === */
+function countUpAnimation(elementId, target, duration = 1200) {
+    const el = document.getElementById(elementId);
+    if (!el) return;
+    const num = parseInt(target) || 0;
+    if (num === 0) { el.textContent = 0; return; }
+    const step = Math.max(1, Math.floor(num / (duration / 16)));
+    let current = 0;
+    const timer = setInterval(() => {
+        current = Math.min(current + step, num);
+        el.textContent = current;
+        if (current >= num) clearInterval(timer);
+    }, 16);
+}
+
+/* === CHART.JS CHARTS === */
+let _attendanceChartInst = null;
+let _departmentChartInst = null;
+
+function initCharts(dashboard) {
+    // Attendance bar chart
+    const attCtx = document.getElementById('attendanceChart');
+    if (attCtx && dashboard.event_registrations && dashboard.event_registrations.length) {
+        if (_attendanceChartInst) _attendanceChartInst.destroy();
+        _attendanceChartInst = new Chart(attCtx, {
+            type: 'bar',
+            data: {
+                labels: dashboard.event_registrations.map(e => e.event_name),
+                datasets: [{
+                    label: 'Registered',
+                    data: dashboard.event_registrations.map(e => e.total_registered || 0),
+                    backgroundColor: 'rgba(99,102,241,0.75)',
+                    borderRadius: 6
+                }, {
+                    label: 'Attended',
+                    data: dashboard.event_registrations.map(e => e.total_attended || 0),
+                    backgroundColor: 'rgba(16,185,129,0.75)',
+                    borderRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'top' } },
+                scales: { y: { beginAtZero: true, ticks: { stepSize: 1 } } }
+            }
+        });
+    }
+
+    // Department doughnut chart
+    const deptCtx = document.getElementById('departmentChart');
+    if (deptCtx && dashboard.department_stats && dashboard.department_stats.length) {
+        if (_departmentChartInst) _departmentChartInst.destroy();
+        const COLORS = [
+            'rgba(99,102,241,0.85)',
+            'rgba(16,185,129,0.85)',
+            'rgba(245,158,11,0.85)',
+            'rgba(239,68,68,0.85)',
+            'rgba(6,182,212,0.85)',
+            'rgba(168,85,247,0.85)'
+        ];
+        _departmentChartInst = new Chart(deptCtx, {
+            type: 'doughnut',
+            data: {
+                labels: dashboard.department_stats.map(d => d.department),
+                datasets: [{
+                    data: dashboard.department_stats.map(d => d.count || 0),
+                    backgroundColor: COLORS
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: { legend: { position: 'bottom' } }
+            }
+        });
+    }
 }
 
 // Load dashboard on page load

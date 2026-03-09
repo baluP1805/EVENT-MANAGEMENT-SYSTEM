@@ -128,6 +128,95 @@ function debounce(func, wait) {
     };
 }
 
+/* ============================================================
+   THEME SYSTEM
+   ============================================================ */
+
+/**
+ * Load saved theme from localStorage and apply to <html> element.
+ * Call once on page load.
+ */
+function initTheme() {
+    const saved = localStorage.getItem('ems-theme') || 'light';
+    document.documentElement.setAttribute('data-theme', saved);
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = saved === 'dark' ? '☀️' : '🌙';
+}
+
+/**
+ * Toggle between light and dark themes.
+ */
+function toggleTheme() {
+    const html = document.documentElement;
+    const current = html.getAttribute('data-theme') || 'light';
+    const next = current === 'dark' ? 'light' : 'dark';
+    html.setAttribute('data-theme', next);
+    localStorage.setItem('ems-theme', next);
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.textContent = next === 'dark' ? '☀️' : '🌙';
+}
+
+// Wire theme toggle button after DOM ready
+document.addEventListener('DOMContentLoaded', () => {
+    initTheme();
+    const btn = document.getElementById('themeToggle');
+    if (btn) btn.addEventListener('click', toggleTheme);
+});
+
+/* ============================================================
+   TOAST NOTIFICATION SYSTEM
+   ============================================================ */
+
+const _toastIcons = { success: '✅', error: '❌', warning: '⚠️', info: 'ℹ️' };
+
+/**
+ * Show an animated toast notification.
+ * @param {string} message - Text to display
+ * @param {'success'|'error'|'warning'|'info'} type - Toast type
+ * @param {number} duration - Auto-dismiss delay in ms (default 4000)
+ */
+function showToast(message, type = 'info', duration = 4000) {
+    let container = document.getElementById('toastContainer');
+    if (!container) {
+        container = document.createElement('div');
+        container.className = 'toast-container';
+        container.id = 'toastContainer';
+        document.body.appendChild(container);
+    }
+
+    const toast = document.createElement('div');
+    toast.className = `toast toast-${type}`;
+    toast.innerHTML = `
+        <span class="toast-icon">${_toastIcons[type] || 'ℹ️'}</span>
+        <span class="toast-msg">${escapeHtml(String(message))}</span>
+        <button class="toast-close" aria-label="Dismiss">&times;</button>`;
+
+    const dismiss = () => {
+        toast.classList.add('removing');
+        toast.addEventListener('animationend', () => toast.remove(), { once: true });
+    };
+    toast.querySelector('.toast-close').addEventListener('click', dismiss);
+
+    container.appendChild(toast);
+    if (duration > 0) setTimeout(dismiss, duration);
+    return toast;
+}
+
+/* Ripple effect helper */
+function addRipple(e) {
+    const btn = e.currentTarget;
+    const ripple = document.createElement('span');
+    ripple.className = 'ripple-effect';
+    const rect = btn.getBoundingClientRect();
+    const size = Math.max(rect.width, rect.height);
+    ripple.style.cssText = `width:${size}px;height:${size}px;left:${e.clientX - rect.left - size/2}px;top:${e.clientY - rect.top - size/2}px;`;
+    btn.appendChild(ripple);
+    ripple.addEventListener('animationend', () => ripple.remove(), { once: true });
+}
+document.addEventListener('DOMContentLoaded', () => {
+    document.querySelectorAll('.ripple-btn').forEach(btn => btn.addEventListener('click', addRipple));
+});
+
 /**
  * Check if user is authenticated (has valid token)
  * @returns {boolean} - True if authenticated

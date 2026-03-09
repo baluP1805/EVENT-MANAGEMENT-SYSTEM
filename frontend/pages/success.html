@@ -4,44 +4,54 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registration Success - College EMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="success-container">
-        <div class="success-box">
-            <div class="success-icon">✓</div>
-            <h1>Registration Successful!</h1>
-            <p class="success-message">You have successfully registered for the selected events.</p>
-            
-            <div class="registered-events">
-                <h3>Your Registered Events:</h3>
-                <ul id="eventsList">
-                    <!-- Events will be loaded here -->
-                </ul>
+    <div class="success-modern">
+        <div class="success-card">
+            <div class="success-check">✓</div>
+            <h1 style="font-size:1.75rem;font-weight:800;color:var(--text-primary);margin-bottom:0.75rem;">Registration Successful!</h1>
+            <p style="color:var(--text-secondary);margin-bottom:2rem;font-size:0.95rem;line-height:1.6;">
+                You have successfully registered. Check your email for confirmation details.
+            </p>
+
+            <div id="registeredEventsSection" style="display:none;margin-bottom:2rem;">
+                <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:1.25rem;text-align:left;">
+                    <h3 style="font-size:0.875rem;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.75rem;">📅 Your Registered Event</h3>
+                    <ul id="eventsList" style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;"></ul>
+                </div>
             </div>
-            
-            <div class="info-box">
+
+            <div style="background:rgba(99,102,241,0.06);border-radius:12px;padding:1.25rem;margin-bottom:2rem;text-align:left;font-size:0.875rem;color:var(--text-secondary);line-height:1.7;">
                 <p>📧 A confirmation email has been sent to your registered email address.</p>
-                <p>📱 Keep your phone ready to scan the QR code on the event day for attendance.</p>
+                <p style="margin-top:0.5rem;">📱 On the event day, open the <strong>Events</strong> page and scan the QR code to mark attendance.</p>
             </div>
-            
-            <div class="action-buttons">
-                <a href="events.html" class="btn btn-secondary">Back to Home</a>
+
+            <div style="display:flex;gap:1rem;justify-content:center;flex-wrap:wrap;">
+                <a href="events.html" class="btn btn-primary" style="min-width:160px;">Go to Events</a>
+                <a href="login.html" class="btn btn-secondary" style="min-width:160px;">Back to Login</a>
+            </div>
+
+            <div style="margin-top:1.5rem;display:flex;justify-content:center;">
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
             </div>
         </div>
     </div>
-    
+    <div class="toast-container" id="toastContainer"></div>
+    <script src="../js/config.js"></script>
+    <script src="../js/utils.js"></script>
     <script>
-        // Display registered events from localStorage
-        const studentData = JSON.parse(localStorage.getItem('studentData'));
-        const registeredEvents = JSON.parse(localStorage.getItem('registeredEvents'));
-        
-        if (registeredEvents && registeredEvents.length > 0) {
-            const eventsList = document.getElementById('eventsList');
-            registeredEvents.forEach(event => {
+        const registeredEvents = JSON.parse(localStorage.getItem('registeredEvents') || '[]');
+        if (registeredEvents.length > 0) {
+            document.getElementById('registeredEventsSection').style.display = 'block';
+            const evList = document.getElementById('eventsList');
+            registeredEvents.forEach(ev => {
                 const li = document.createElement('li');
-                li.textContent = event;
-                eventsList.appendChild(li);
+                li.style.cssText = 'display:flex;align-items:center;gap:0.5rem;color:var(--text-primary);font-weight:500;';
+                li.innerHTML = '<span style="color:#10b981;">✓</span> ' + (typeof ev === 'string' ? ev : ev.name || JSON.stringify(ev));
+                evList.appendChild(li);
             });
         }
     </script>

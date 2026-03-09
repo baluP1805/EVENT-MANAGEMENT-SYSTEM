@@ -4,6 +4,9 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Select Events - College EMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
@@ -30,6 +33,7 @@
                     Scan QR
                 </button>
                 <button id="logoutBtn" class="btn btn-secondary btn-sm">Logout</button>
+                <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
             </div>
         </nav>
         
@@ -105,7 +109,8 @@
             <p style="text-align: center; color: #6b7280; margin-bottom: 1rem;">
                 Position the event QR code within the camera frame below
             </p>
-            <div id="scannerContainer">
+            <div id="scannerContainer" style="position:relative;">
+                <div class="scanner-scan-line"></div>
                 <div id="qr-reader-modal" style="width:100%; max-width:500px; margin: 0 auto; border-radius: 8px; overflow: hidden;"></div>
             </div>
             <div id="scanStatus" class="scan-status">🔍 Initializing camera...</div>
@@ -127,9 +132,19 @@
         </div>
     </div>
     
+    <!-- FAB Button (mobile QR shortcut) -->
+    <button class="fab" onclick="openQRScanner()" title="Scan QR Code" aria-label="Scan QR Code">📱</button>
+
+    <!-- Toast container -->
+    <div class="toast-container" id="toastContainer"></div>
+
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
     <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
     <script src="../js/events.js"></script>
+    <script>
+        AOS.init({ duration: 600, once: true, offset: 40 });
+    </script>
 </body>
 </html>

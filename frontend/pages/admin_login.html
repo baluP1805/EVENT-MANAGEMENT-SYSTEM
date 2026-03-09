@@ -4,41 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Login - College EMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-box">
-            <div class="auth-header admin-header">
-                <h1>Admin Login</h1>
-                <p>Access the administrative dashboard.</p>
+    <div class="auth-split">
+        <!-- Admin Brand Panel -->
+        <div class="auth-brand-panel" style="background:linear-gradient(135deg,#991b1b 0%,#dc2626 50%,#ef4444 100%);">
+            <div class="auth-brand-logo">🛡️</div>
+            <h1 class="auth-brand-title">Admin Portal</h1>
+            <p class="auth-brand-subtitle">Event Management &amp; Attendance Control</p>
+            <div class="auth-brand-features">
+                <div class="auth-brand-feature">📊 Full dashboard analytics</div>
+                <div class="auth-brand-feature">🎯 QR code generation</div>
+                <div class="auth-brand-feature">📥 Excel report exports</div>
+                <div class="auth-brand-feature">⚠️ Unauthorized scan logs</div>
             </div>
-            
-            <form id="adminLoginForm" class="auth-form">
-                <div class="form-group">
-                    <label for="email">Admin Email</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter admin email">
+        </div>
+        <!-- Form panel -->
+        <div class="auth-form-panel">
+            <div class="auth-form-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                    <div>
+                        <h2 style="font-size:1.75rem;font-weight:800;color:var(--admin-color);margin-bottom:0.25rem;">Admin Login</h2>
+                        <p style="color:var(--text-secondary);font-size:0.9rem;">Restricted access — authorized personnel only</p>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter admin password">
+                <form id="adminLoginForm">
+                    <div class="form-label-float">
+                        <label for="email">Admin Email</label>
+                        <input type="email" id="email" name="email" required placeholder="admin@college.edu" autocomplete="email">
+                    </div>
+                    <div class="form-label-float">
+                        <label for="password">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" id="password" name="password" required placeholder="Enter admin password" autocomplete="current-password">
+                            <span class="input-icon" id="togglePwd" role="button" aria-label="Toggle password visibility">👁</span>
+                        </div>
+                    </div>
+                    <div id="errorMessage" class="error-message" style="display:none;"></div>
+                    <div id="successMessage" class="success-message" style="display:none;"></div>
+                    <button type="submit" class="btn btn-admin btn-full" style="margin-top:0.5rem;min-height:48px;font-weight:600;font-size:1rem;">Access Dashboard</button>
+                </form>
+                <div style="text-align:center;margin-top:1.5rem;">
+                    <a href="../index.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">← Back to Home</a>
                 </div>
-                
-                <div id="errorMessage" class="error-message" style="display: none;"></div>
-                <div id="successMessage" class="success-message" style="display: none;"></div>
-                
-                <button type="submit" class="btn btn-admin btn-full">Admin Login</button>
-            </form>
-            
-            <div class="auth-footer">
-                <p><a href="../index.html">Back to Home</a></p>
             </div>
         </div>
     </div>
-    
+    <div class="toast-container" id="toastContainer"></div>
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/login.js"></script>
+    <script>
+        document.getElementById('togglePwd')?.addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            if (pwd.type === 'password') { pwd.type = 'text'; this.textContent = '🙈'; }
+            else { pwd.type = 'password'; this.textContent = '👁'; }
+        });
+    </script>
 </body>
 </html>

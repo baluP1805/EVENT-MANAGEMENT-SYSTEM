@@ -4,42 +4,66 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Student Login - College EMS</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../css/style.css">
 </head>
 <body>
-    <div class="auth-container">
-        <div class="auth-box">
-            <div class="auth-header">
-                <h1>Student Login</h1>
-                <p>Welcome back! Please login to your account.</p>
+    <div class="auth-split">
+        <!-- Brand panel -->
+        <div class="auth-brand-panel">
+            <div class="auth-brand-logo">🎓</div>
+            <h1 class="auth-brand-title">College Event<br>Management System</h1>
+            <p class="auth-brand-subtitle">Your gateway to campus events &amp; QR attendance</p>
+            <div class="auth-brand-features">
+                <div class="auth-brand-feature">📝 Register for events easily</div>
+                <div class="auth-brand-feature">📱 Scan QR for attendance</div>
+                <div class="auth-brand-feature">📧 Get email confirmations</div>
             </div>
-            
-            <form id="loginForm" class="auth-form">
-                <div class="form-group">
-                    <label for="email">Email</label>
-                    <input type="email" id="email" name="email" required placeholder="Enter your email">
+        </div>
+        <!-- Form panel -->
+        <div class="auth-form-panel">
+            <div class="auth-form-card">
+                <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:2rem;">
+                    <div>
+                        <h2 style="font-size:1.75rem;font-weight:800;color:var(--text-primary);margin-bottom:0.25rem;">Welcome back</h2>
+                        <p style="color:var(--text-secondary);font-size:0.9rem;">Sign in to your student account</p>
+                    </div>
+                    <button class="theme-toggle" id="themeToggle" title="Toggle theme" aria-label="Toggle theme">🌙</button>
                 </div>
-                
-                <div class="form-group">
-                    <label for="password">Password</label>
-                    <input type="password" id="password" name="password" required placeholder="Enter your password">
+                <form id="loginForm">
+                    <div class="form-label-float">
+                        <label for="email">Email Address</label>
+                        <input type="email" id="email" name="email" required placeholder="you@college.edu" autocomplete="email">
+                    </div>
+                    <div class="form-label-float">
+                        <label for="password">Password</label>
+                        <div class="input-with-icon">
+                            <input type="password" id="password" name="password" required placeholder="Enter your password" autocomplete="current-password">
+                            <span class="input-icon" id="togglePwd" role="button" aria-label="Toggle password visibility">👁</span>
+                        </div>
+                    </div>
+                    <div id="errorMessage" class="error-message" style="display:none;"></div>
+                    <div id="successMessage" class="success-message" style="display:none;"></div>
+                    <button type="submit" class="btn btn-primary btn-full" style="margin-top:0.5rem;min-height:48px;font-weight:600;font-size:1rem;">Sign In</button>
+                </form>
+                <div style="text-align:center;margin-top:1.5rem;color:var(--text-secondary);font-size:0.9rem;">
+                    <p>New student? <a href="register.html" style="color:var(--primary);font-weight:600;text-decoration:none;">Create account</a></p>
+                    <p style="margin-top:0.5rem;"><a href="../index.html" style="color:var(--text-secondary);text-decoration:none;font-size:0.85rem;">← Back to Home</a></p>
                 </div>
-                
-                <div id="errorMessage" class="error-message" style="display: none;"></div>
-                <div id="successMessage" class="success-message" style="display: none;"></div>
-                
-                <button type="submit" class="btn btn-primary btn-full">Login</button>
-            </form>
-            
-            <div class="auth-footer">
-                <p>New user? <a href="register.html">Register here</a></p>
-                <p><a href="../index.html">Back to Home</a></p>
             </div>
         </div>
     </div>
-    
+    <div class="toast-container" id="toastContainer"></div>
     <script src="../js/config.js"></script>
     <script src="../js/utils.js"></script>
     <script src="../js/login.js"></script>
+    <script>
+        document.getElementById('togglePwd')?.addEventListener('click', function() {
+            const pwd = document.getElementById('password');
+            if (pwd.type === 'password') { pwd.type = 'text'; this.textContent = '🙈'; }
+            else { pwd.type = 'password'; this.textContent = '👁'; }
+        });
+    </script>
 </body>
 </html>

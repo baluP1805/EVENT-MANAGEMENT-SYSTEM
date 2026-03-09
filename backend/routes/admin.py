@@ -334,6 +334,145 @@ def export_attendance(event_id):
         return jsonify({'success': False, 'message': f'Export failed: {str(e)}'}), 500
 
 
+@admin_bp.route('/student/<student_id>', methods=['PUT'])
+def update_student(student_id):
+    """Update student information (admin only)"""
+    try:
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        payload, error = verify_admin_token(token)
+        if error:
+            return jsonify({'success': False, 'message': error}), 401
+
+        data = request.get_json() or {}
+        allowed_fields = {'name': InputSanitizer.sanitize_name,
+                          'department': InputSanitizer.sanitize_string,
+                          'course': InputSanitizer.sanitize_string,
+                          'year': InputSanitizer.sanitize_string,
+                          'email': InputSanitizer.sanitize_email,
+                          'phone_number': InputSanitizer.sanitize_phone}
+
+        update_payload = {}
+        for field, sanitizer in allowed_fields.items():
+            if field in data and data[field] is not None:
+                update_payload[field] = sanitizer(str(data[field]))
+
+        if not update_payload:
+            return jsonify({'success': False, 'message': 'No valid fields provided'}), 400
+
+        update_payload['updated_at'] = datetime.utcnow().isoformat()
+
+        from supabase_client import get_supabase_client
+        sb = get_supabase_client()
+        sb.table('students').update(update_payload).eq('id', student_id).execute()
+
+        return jsonify({'success': True, 'message': 'Student updated successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Update failed: {str(e)}'}), 500
+
+
+@admin_bp.route('/student/<student_id>', methods=['DELETE'])
+def delete_student(student_id):
+    """Delete a student and their attendance records (admin only)"""
+    try:
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        payload, error = verify_admin_token(token)
+        if error:
+            return jsonify({'success': False, 'message': error}), 401
+
+        from supabase_client import get_supabase_client
+        sb = get_supabase_client()
+        # Remove attendance records first to avoid orphans
+        sb.table('attendance').delete().eq('student_id', student_id).execute()
+        sb.table('students').delete().eq('id', student_id).execute()
+
+        return jsonify({'success': True, 'message': 'Student deleted successfully'})
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Delete failed: {str(e)}'}), 500
+
+
+@admin_bp.route('/export-all-attendance', methods=['GET'])
+def export_all_attendance():
+    """Export attendance summary for all events to a multi-sheet Excel file"""
+    try:
+        token = request.headers.get('Authorization', '').replace('Bearer ', '')
+        payload, error = verify_admin_token(token)
+        if error:
+            return jsonify({'success': False, 'message': error}), 401
+
+        from supabase_client import get_supabase_client
+        sb = get_supabase_client()
+        events_res = sb.table('events').select('id, event_name, date').execute()
+        all_events = events_res.data or []
+
+        wb = Workbook()
+        ws_summary = wb.active
+        ws_summary.title = 'Summary'
+
+        summary_headers = ['S.No', 'Event Name', 'Date', 'Registered', 'Attended', 'Absent', 'Attendance %']
+        ws_summary.append(summary_headers)
+        for cell in ws_summary[1]:
+            cell.font = cell.font.copy(bold=True, color='FFFFFF')
+            cell.fill = cell.fill.copy(fgColor='4472C4', patternType='solid')
+
+        for idx, event in enumerate(all_events, 1):
+            event_id = str(event['id'])
+            registered_students = Student.get_students_by_event(event_id)
+            attendance_records = Attendance.get_event_attendance(event_id)
+            attendance_map = {str(r['student_id']): r['marked_at'] for r in attendance_records}
+
+            total_reg = len(registered_students)
+            total_att = len(attendance_map)
+            total_abs = total_reg - total_att
+            pct = round(total_att / total_reg * 100, 1) if total_reg > 0 else 0
+
+            ws_summary.append([idx, event['event_name'], event.get('date', 'N/A'),
+                               total_reg, total_att, total_abs, f'{pct}%'])
+
+            # Per-event detail sheet (Excel sheet names max 31 chars)
+            sheet_name = event['event_name'][:31]
+            ws = wb.create_sheet(title=sheet_name)
+            detail_headers = ['S.No', 'Register Number', 'Name', 'Department', 'Course', 'Year', 'Status', 'Attendance Time']
+            ws.append(detail_headers)
+            for cell in ws[1]:
+                cell.font = cell.font.copy(bold=True, color='FFFFFF')
+                cell.fill = cell.fill.copy(fgColor='4472C4', patternType='solid')
+
+            registered_students.sort(key=lambda x: x.get('register_number', ''))
+            for i, student in enumerate(registered_students, 1):
+                student_id = InputSanitizer.get_id(student)
+                is_present = student_id in attendance_map
+                marked_at = attendance_map.get(student_id)
+                if marked_at:
+                    try:
+                        dt = datetime.fromisoformat(marked_at.replace('Z', '+00:00'))
+                        attendance_time = dt.strftime('%Y-%m-%d %H:%M:%S')
+                    except Exception:
+                        attendance_time = str(marked_at)
+                else:
+                    attendance_time = '-'
+
+                ws.append([i, student['register_number'], student['name'], student['department'],
+                           student.get('course', 'N/A'), student['year'],
+                           'Present' if is_present else 'Absent', attendance_time])
+                color = 'C6EFCE' if is_present else 'FFC7CE'
+                for cell in ws[i + 1]:
+                    cell.fill = cell.fill.copy(fgColor=color, patternType='solid')
+
+        excel_file = BytesIO()
+        wb.save(excel_file)
+        excel_file.seek(0)
+        filename = f"all_events_attendance_{datetime.now().strftime('%Y%m%d_%H%M%S')}.xlsx"
+
+        return send_file(
+            excel_file,
+            mimetype='application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+            as_attachment=True,
+            download_name=filename
+        )
+    except Exception as e:
+        return jsonify({'success': False, 'message': f'Export failed: {str(e)}'}), 500
+
+
 @admin_bp.route('/unauthorized-logs', methods=['GET'])
 def get_unauthorized_logs():
     """Get all unauthorized scan attempts"""

@@ -4,59 +4,143 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>College Event Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/aos@2.3.4/dist/aos.css">
     <link rel="stylesheet" href="css/style.css">
 </head>
 <body>
-    <div class="landing-container">
-        <nav class="navbar">
-            <h1 class="logo">College EMS</h1>
-        </nav>
-        
-        <div class="hero-section">
-            <div class="hero-content">
-                <h1 class="hero-title">College Event Management System</h1>
-                <p class="hero-subtitle">with QR Code Attendance</p>
-                <p class="hero-description">
-                    Manage college events, register students, and track attendance with secure QR code technology.
-                </p>
-                
-                <div class="action-buttons">
-                    <a href="pages/login.html" class="btn btn-primary">Student Login</a>
-                    <a href="pages/register.html" class="btn btn-secondary">Student Register</a>
-                    <a href="pages/admin_login.html" class="btn btn-admin">Admin Login</a>
+    <!-- Sticky Navbar -->
+    <nav class="navbar-modern">
+        <div class="navbar-logo">
+            <div class="navbar-logo-icon">🎓</div>
+            College EMS
+        </div>
+        <div style="display:flex;align-items:center;gap:0.75rem;">
+            <button class="theme-toggle" id="themeToggle" title="Toggle dark mode" aria-label="Toggle dark mode">🌙</button>
+            <a href="pages/login.html" class="btn btn-primary btn-sm">Login</a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero-gradient">
+        <div class="hero-inner">
+            <div data-aos="fade-right">
+                <div class="section-tag" style="background:rgba(255,255,255,0.15);color:white;">🎓 College EMS</div>
+                <h1 class="hero-headline">Manage Events<br>with Ease &amp; Speed</h1>
+                <p class="hero-sub">Seamlessly register students, generate secure QR codes, and track attendance in real-time — all in one platform.</p>
+                <div class="hero-cta-group">
+                    <a href="pages/login.html" class="btn btn-white">Student Login</a>
+                    <a href="pages/register.html" class="btn btn-outline-white">Register Now</a>
+                    <a href="pages/admin_login.html" class="btn btn-outline-white" style="opacity:0.8;">Admin →</a>
                 </div>
             </div>
-            
-            <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon">📝</div>
-                    <h3>Easy Registration</h3>
-                    <p>Quick and simple event registration process</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📱</div>
-                    <h3>QR Code Attendance</h3>
-                    <p>Contactless attendance marking with QR codes</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">📊</div>
-                    <h3>Real-time Reports</h3>
-                    <p>Comprehensive analytics and attendance reports</p>
-                </div>
-                
-                <div class="feature-card">
-                    <div class="feature-icon">🔒</div>
-                    <h3>Secure System</h3>
-                    <p>Protected with encryption and authentication</p>
+            <div class="hero-visual" data-aos="fade-left" data-aos-delay="200">
+                <div class="hero-card-stack">
+                    <div class="hero-mini-card"><div class="hero-mini-card-icon">📝</div><div class="hero-mini-card-label">Easy Registration</div></div>
+                    <div class="hero-mini-card"><div class="hero-mini-card-icon">📱</div><div class="hero-mini-card-label">QR Attendance</div></div>
+                    <div class="hero-mini-card"><div class="hero-mini-card-icon">📊</div><div class="hero-mini-card-label">Analytics</div></div>
+                    <div class="hero-mini-card"><div class="hero-mini-card-icon">🔒</div><div class="hero-mini-card-label">Secure System</div></div>
                 </div>
             </div>
         </div>
-        
-        <footer class="footer">
-            <p>&copy; 2026 College Event Management System. All rights reserved.</p>
-        </footer>
-    </div>
+    </section>
+
+    <!-- Features -->
+    <section class="features-section">
+        <div class="section-header" data-aos="fade-up">
+            <div class="section-tag">✨ Features</div>
+            <h2 class="section-title">Everything you need</h2>
+            <p class="section-subtitle">A complete event management solution built for modern colleges.</p>
+        </div>
+        <div class="features-grid-modern">
+            <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="0">
+                <div class="feature-icon-modern">📝</div>
+                <h3>Easy Registration</h3>
+                <p>Quick and simple event registration with form validation and instant confirmation emails.</p>
+            </div>
+            <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="100">
+                <div class="feature-icon-modern">📱</div>
+                <h3>QR Code Attendance</h3>
+                <p>Contactless attendance marking using secure, time-stamped QR codes generated per event.</p>
+            </div>
+            <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="200">
+                <div class="feature-icon-modern">📊</div>
+                <h3>Real-time Reports</h3>
+                <p>Comprehensive analytics, department-wise breakdowns, and exportable Excel reports.</p>
+            </div>
+            <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="300">
+                <div class="feature-icon-modern">🔒</div>
+                <h3>Secure &amp; Reliable</h3>
+                <p>JWT authentication, bcrypt password hashing, and unauthorized scan detection.</p>
+            </div>
+            <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="400">
+                <div class="feature-icon-modern">📧</div>
+                <h3>Email Notifications</h3>
+                <p>Automatic confirmation emails for registration, event signup, and attendance marking.</p>
+            </div>
+            <div class="feature-card-modern" data-aos="fade-up" data-aos-delay="500">
+                <div class="feature-icon-modern">⚡</div>
+                <h3>Lightning Fast</h3>
+                <p>Built on Flask + Supabase for blazing fast data retrieval and concurrent user support.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- How it works -->
+    <section class="how-section">
+        <div class="section-header" data-aos="fade-up">
+            <div class="section-tag">🚀 How it works</div>
+            <h2 class="section-title">Simple 4-step process</h2>
+            <p class="section-subtitle">From registration to attendance tracking in minutes.</p>
+        </div>
+        <div class="steps-grid">
+            <div class="step-card" data-aos="zoom-in" data-aos-delay="0">
+                <div class="step-number">1</div>
+                <h4>Register Account</h4>
+                <p>Create your student account with department and course details.</p>
+            </div>
+            <div class="step-card" data-aos="zoom-in" data-aos-delay="100">
+                <div class="step-number">2</div>
+                <h4>Browse &amp; Register</h4>
+                <p>Browse available events and register for your chosen one.</p>
+            </div>
+            <div class="step-card" data-aos="zoom-in" data-aos-delay="200">
+                <div class="step-number">3</div>
+                <h4>Attend Event</h4>
+                <p>Show up to the event at the scheduled venue and time.</p>
+            </div>
+            <div class="step-card" data-aos="zoom-in" data-aos-delay="300">
+                <div class="step-number">4</div>
+                <h4>Scan QR Code</h4>
+                <p>Use the app to scan the event QR code and mark your attendance.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- CTA -->
+    <section class="cta-section" data-aos="fade-up">
+        <h2 class="cta-title">Ready to get started?</h2>
+        <p class="cta-sub">Join your college event management system today.</p>
+        <div class="cta-buttons">
+            <a href="pages/register.html" class="btn btn-white">Create Account</a>
+            <a href="pages/login.html" class="btn btn-outline-white">Sign In</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer-modern">
+        <p>&copy; 2026 College Event Management System. All rights reserved.</p>
+    </footer>
+
+    <div class="toast-container" id="toastContainer"></div>
+
+    <script src="https://unpkg.com/aos@2.3.4/dist/aos.js"></script>
+    <script src="js/config.js"></script>
+    <script src="js/utils.js"></script>
+    <script>
+        AOS.init({ duration: 700, once: true, offset: 60 });
+    </script>
 </body>
 </html>
