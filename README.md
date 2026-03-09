@@ -397,7 +397,7 @@ The application will start on `http://localhost:5000`
 - Server-side data validation
 - Comprehensive error messages
 
-## � Deployment
+## 🚀 Deployment
 
 For production deployment to Vercel (frontend) and your chosen backend platform, see [VERCEL_DEPLOYMENT.md](VERCEL_DEPLOYMENT.md).
 
@@ -485,12 +485,3 @@ python app.py
 - Password: `Admin@123`
 
 **⚠️ Remember to change admin credentials in production!**
-#   E V E N T - M A N A G E M E N T - S Y S T E M 
- 
- #   E V E N T - M A N A G E M E N T - S Y S T E M 
- 
- #   E V E N T - M A N A G E M E N T - S Y S T E M 
- 
- #   E V E N T - M A N A G E M E N T - S Y S T E M 
- 
- 
