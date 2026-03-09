@@ -14,16 +14,24 @@ from routes.attendance import attendance_bp
 from models.event import Event
 import logging
 
+# Detect Vercel serverless environment
+IS_VERCEL = os.getenv('VERCEL') == '1' or os.getenv('VERCEL_ENV') is not None
+
+# Resolve frontend static folder — works both locally and on Vercel
+_here = os.path.dirname(os.path.abspath(__file__))
+_frontend = os.path.join(_here, '..', 'frontend')
+if not os.path.isdir(_frontend):
+    _frontend = os.path.join(_here, 'frontend')  # fallback
+
 # Initialize Flask app
-app = Flask(__name__, static_folder='../frontend', static_url_path='')
+app = Flask(__name__, static_folder=os.path.abspath(_frontend), static_url_path='')
 app.config.from_object(Config)
 
 # Enable CORS
 CORS(app, resources={r"/api/*": {"origins": "*"}})
 
-# Security headers with Talisman (only in production)
-# Disable in development to avoid CSP/HTTPS issues
-if os.getenv('FLASK_ENV') == 'production':
+# Security headers with Talisman — skip on Vercel (serverless HTTPS is handled by the platform)
+if os.getenv('FLASK_ENV') == 'production' and not IS_VERCEL:
     csp = {
         'default-src': ["'self'"],
         'script-src': ["'self'", "'unsafe-inline'", "'unsafe-eval'", "cdn.jsdelivr.net", "unpkg.com"],
@@ -32,9 +40,8 @@ if os.getenv('FLASK_ENV') == 'production':
         'img-src': ["'self'", "data:", "blob:"],
         'connect-src': ["'self'"]
     }
-    
-    Talisman(app, 
-        force_https=True,  # Force HTTPS in production
+    Talisman(app,
+        force_https=True,
         content_security_policy=csp,
         content_security_policy_nonce_in=['script-src'],
         strict_transport_security=True,
@@ -50,15 +57,19 @@ if os.getenv('FLASK_ENV') == 'production':
     )
     logging.info("Security headers enabled (Talisman)")
 else:
-    logging.info("Development mode - Talisman security headers disabled")
+    logging.info("Talisman disabled (development or Vercel)")
 
-# Initialize rate limiter
-limiter = Limiter(
-    app=app,
-    key_func=get_remote_address,
-    storage_uri=Config.RATELIMIT_STORAGE_URL,
-    default_limits=["200 per day", "50 per hour"]
-)
+# Initialize rate limiter — use memory:// which is fine for serverless cold starts
+try:
+    limiter = Limiter(
+        app=app,
+        key_func=get_remote_address,
+        storage_uri=Config.RATELIMIT_STORAGE_URL,
+        default_limits=["200 per day", "50 per hour"]
+    )
+except Exception as _limiter_err:
+    logging.warning(f"Rate limiter init failed (non-fatal): {_limiter_err}")
+    limiter = None
 
 # Setup logging
 logging.basicConfig(
