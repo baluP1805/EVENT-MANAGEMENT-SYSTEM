@@ -485,8 +485,12 @@ python app.py
 - Password: `Admin@123`
 
 **⚠️ Remember to change admin credentials in production!**
-#   E V E N T - M A N A G E M E N T - S Y S T E M  
- #   E V E N T - M A N A G E M E N T - S Y S T E M  
- #   E V E N T - M A N A G E M E N T - S Y S T E M  
- #   E V E N T - M A N A G E M E N T - S Y S T E M  
+#   E V E N T - M A N A G E M E N T - S Y S T E M 
+ 
+ #   E V E N T - M A N A G E M E N T - S Y S T E M 
+ 
+ #   E V E N T - M A N A G E M E N T - S Y S T E M 
+ 
+ #   E V E N T - M A N A G E M E N T - S Y S T E M 
+ 
  
