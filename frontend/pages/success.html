@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Registration Success - College EMS</title>
+    <link rel="stylesheet" href="../css/style.css">
+</head>
+<body>
+    <div class="success-container">
+        <div class="success-box">
+            <div class="success-icon">✓</div>
+            <h1>Registration Successful!</h1>
+            <p class="success-message">You have successfully registered for the selected events.</p>
+            
+            <div class="registered-events">
+                <h3>Your Registered Events:</h3>
+                <ul id="eventsList">
+                    <!-- Events will be loaded here -->
+                </ul>
+            </div>
+            
+            <div class="info-box">
+                <p>📧 A confirmation email has been sent to your registered email address.</p>
+                <p>📱 Keep your phone ready to scan the QR code on the event day for attendance.</p>
+            </div>
+            
+            <div class="action-buttons">
+                <a href="events.html" class="btn btn-secondary">Back to Home</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        // Display registered events from localStorage
+        const studentData = JSON.parse(localStorage.getItem('studentData'));
+        const registeredEvents = JSON.parse(localStorage.getItem('registeredEvents'));
+        
+        if (registeredEvents && registeredEvents.length > 0) {
+            const eventsList = document.getElementById('eventsList');
+            registeredEvents.forEach(event => {
+                const li = document.createElement('li');
+                li.textContent = event;
+                eventsList.appendChild(li);
+            });
+        }
+    </script>
+</body>
+</html>
