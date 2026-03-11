@@ -5,7 +5,7 @@ const API_BASE_URL = window.API_BASE_URL || 'http://localhost:5000/api';
 const adminToken = localStorage.getItem('adminToken');
 
 if (!adminToken) {
-    window.location.href = 'admin_login.html';
+    window.location.href = 'login.html';
 }
 
 // Logout handler

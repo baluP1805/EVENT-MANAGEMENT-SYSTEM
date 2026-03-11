@@ -19,6 +19,7 @@
     --secondary-color: #64748b;
     --admin-color:     #ef4444;
     --admin-dark:      #dc2626;
+    --admin-gradient:  linear-gradient(135deg,#991b1b 0%,#dc2626 50%,#ef4444 100%);
     --success-color:   #10b981;
     --error-color:     #ef4444;
     --warning-color:   #f59e0b;
@@ -28,6 +29,14 @@
     --background:      #f1f5f9;
     --card-background: #ffffff;
     --surface-glass:   rgba(255,255,255,0.82);
+    --surface-alt:     #f3f4f6;
+    --info-bg:         #eff6ff;
+    --error-bg:        #fee2e2;
+    --success-bg:      #dcfce7;
+    --hover-row-bg:    #f8fafc;
+    --status-present-bg: #f0fdf4;
+    --status-absent-bg:  #fef2f2;
+    --report-gradient: linear-gradient(135deg, rgba(102,126,234,0.08) 0%, rgba(118,75,162,0.08) 100%);
 
     /* Text */
     --text-primary:   #0f172a;
@@ -59,9 +68,18 @@
     --primary:       #818cf8;
     --primary-dark:  #6366f1;
     --primary-light: #a5b4fc;
+    --admin-gradient: linear-gradient(135deg,#7f1d1d 0%,#991b1b 50%,#b91c1c 100%);
     --background:      #0f172a;
     --card-background: #1e293b;
     --surface-glass:   rgba(30,41,59,0.85);
+    --surface-alt:     #1f2937;
+    --info-bg:         #1e3a8a;
+    --error-bg:        #7f1d1d;
+    --success-bg:      #143a1d;
+    --hover-row-bg:    #1e293b;
+    --status-present-bg: #064e3b;
+    --status-absent-bg:  #7f1d1d;
+    --report-gradient: linear-gradient(135deg, rgba(129,124,248,0.12) 0%, rgba(168,85,247,0.12) 100%);
     --text-primary:   #f1f5f9;
     --text-secondary: #94a3b8;
     --border-color:  #334155;
@@ -351,6 +369,8 @@ body {
     border-radius: 8px;
     font-size: 1rem;
     transition: border-color 0.3s ease;
+    background: var(--card-background);
+    color: var(--text-primary);
 }
 
 .form-group input:focus,
@@ -485,7 +505,7 @@ body {
 
 .event-card.selected {
     border-color: var(--primary-color);
-    background: #eff6ff;
+    background: var(--info-bg);
 }
 
 .event-card input[type="checkbox"] {
@@ -685,6 +705,8 @@ tr:hover {
     font-family: monospace;
     font-size: 0.9rem;
     resize: vertical;
+    background: var(--card-background);
+    color: var(--text-primary);
 }
 
 .result-box {
@@ -782,7 +804,7 @@ tr:hover {
 }
 
 .info-box {
-    background: #eff6ff;
+    background: var(--info-bg);
     padding: 1.5rem;
     border-radius: 8px;
     border-left: 4px solid var(--primary-color);
@@ -807,13 +829,13 @@ tr:hover {
 }
 
 .error-message {
-    background: #fee2e2;
+    background: var(--error-bg);
     color: var(--error-color);
     border-left: 4px solid var(--error-color);
 }
 
 .success-message {
-    background: #dcfce7;
+    background: var(--success-bg);
     color: var(--success-color);
     border-left: 4px solid var(--success-color);
 }
@@ -1291,7 +1313,7 @@ tr:hover {
 }
 
 .event-actions .btn {
-    background: white;
+    background: var(--card-background);
     color: var(--primary-color);
     padding: 1rem 2rem;
     font-size: 1.1rem;
@@ -1730,7 +1752,7 @@ tr:hover {
 }
 
 .search-result {
-    background: #f8fafc;
+    background: var(--surface-alt);
     padding: 1.5rem;
     border-radius: 8px;
     border-left: 4px solid var(--primary-color);
@@ -1757,7 +1779,7 @@ tr:hover {
     width: 100%;
     border-collapse: collapse;
     margin-top: 1.5rem;
-    background: white;
+    background: var(--card-background);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
@@ -1779,7 +1801,7 @@ tr:hover {
 
 .attendance-table td {
     padding: 1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
     color: var(--text-color);
 }
 
@@ -1788,15 +1810,15 @@ tr:hover {
 }
 
 .attendance-table tbody tr:hover {
-    background-color: #f8fafc;
+    background-color: var(--hover-row-bg);
 }
 
 .status-present {
-    background-color: #f0fdf4 !important;
+    background-color: var(--status-present-bg) !important;
 }
 
 .status-absent {
-    background-color: #fef2f2 !important;
+    background-color: var(--status-absent-bg) !important;
 }
 
 .status-badge {
@@ -1812,12 +1834,12 @@ tr:hover {
 }
 
 .badge-present {
-    background-color: #10b981;
+    background-color: var(--success-color);
     color: white;
 }
 
 .badge-absent {
-    background-color: #ef4444;
+    background-color: var(--error-color);
     color: white;
 }
 
@@ -1833,7 +1855,7 @@ tr:hover {
     gap: 1.5rem;
     margin-bottom: 2rem;
     padding: 1.5rem;
-    background: linear-gradient(135deg, #667eea15 0%, #764ba215 100%);
+    background: var(--report-gradient);
     border-radius: 12px;
 }
 
@@ -1878,7 +1900,7 @@ tr:hover {
 .table-container table {
     width: 100%;
     border-collapse: collapse;
-    background: white;
+    background: var(--card-background);
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
     border-radius: 8px;
     overflow: hidden;
@@ -1897,11 +1919,11 @@ tr:hover {
 
 .table-container td {
     padding: 1rem;
-    border-bottom: 1px solid #e2e8f0;
+    border-bottom: 1px solid var(--border-color);
 }
 
 .table-container tbody tr:hover {
-    background-color: #f8fafc;
+    background-color: var(--hover-row-bg);
 }
 
 /* Stats List */
@@ -1940,10 +1962,10 @@ tr:hover {
 }
 
 .log-item {
-    background: #fef2f2;
+    background: var(--error-bg);
     padding: 1rem;
     border-radius: 8px;
-    border-left: 4px solid #ef4444;
+    border-left: 4px solid var(--error-color);
     margin-bottom: 1rem;
 }
 

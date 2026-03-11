@@ -19,7 +19,7 @@
 
             <div id="registeredEventsSection" style="display:none;margin-bottom:2rem;">
                 <div style="background:rgba(16,185,129,0.08);border:1px solid rgba(16,185,129,0.2);border-radius:12px;padding:1.25rem;text-align:left;">
-                    <h3 style="font-size:0.875rem;font-weight:700;color:#059669;text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.75rem;">📅 Your Registered Event</h3>
+                    <h3 style="font-size:0.875rem;font-weight:700;color:var(--success-color);text-transform:uppercase;letter-spacing:0.5px;margin-bottom:0.75rem;">📅 Your Registered Event</h3>
                     <ul id="eventsList" style="list-style:none;display:flex;flex-direction:column;gap:0.5rem;"></ul>
                 </div>
             </div>
@@ -50,7 +50,7 @@
             registeredEvents.forEach(ev => {
                 const li = document.createElement('li');
                 li.style.cssText = 'display:flex;align-items:center;gap:0.5rem;color:var(--text-primary);font-weight:500;';
-                li.innerHTML = '<span style="color:#10b981;">✓</span> ' + (typeof ev === 'string' ? ev : ev.name || JSON.stringify(ev));
+                li.innerHTML = '<span style="color:var(--success-color);">✓</span> ' + (typeof ev === 'string' ? ev : ev.name || JSON.stringify(ev));
                 evList.appendChild(li);
             });
         }
